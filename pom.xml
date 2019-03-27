@@ -9,10 +9,31 @@
     <developers>
         <developer>
             <name>weishibai</name>
+            <email>nicklausdouble@gmail.com</email>
+            <organization>github</organization>
+            <organizationUrl>https://nicklaus4.github.io/</organizationUrl>
         </developer>
     </developers>
 
+    <description>zk resource config toolkit</description>
+    <url>https://github.com/nicklaus4/zk-resource-toolkit</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/nicklaus4/zk-resource-toolkit.git</connection>
+        <developerConnection>scm:git:https://github.com/nicklaus4/zk-resource-toolkit.git</developerConnection>
+        <url>https://github.com/nicklaus4/zk-resource-toolkit</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j-version>1.7.25</slf4j-version>
         <java.version>1.8</java.version>
         <curator-version>4.0.1</curator-version>
@@ -160,6 +181,66 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.5</version>
+                    <executions>
+                        <execution>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.2.1</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.3</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <!-- 解决 java8 下发布到 maven 中心库时，生成 doc 的异常 -->
+                        <additionalparam>-Xdoclint:none</additionalparam>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <outputDirectory>${basedir}</outputDirectory>
+                        <reportOutputDirectory>${basedir}</reportOutputDirectory>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                    <configuration>
+                        <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <useReleaseProfile>false</useReleaseProfile>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.0</version>
                     <configuration>
@@ -203,13 +284,64 @@
             </plugins>
         </pluginManagement>
 
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- mvn clean javadoc:jar source:jar deploy -P release -Dgpg.passphrase=xxxx -->
+        <profile>
+            <id>nexus-release</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <gpg.executable>gpg</gpg.executable>
+                <gpg.passphrase />
+            </properties>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>nexus-snapshot</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>nexus-release</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>central</name>
+            <url>https://oss.sonatype.org/content/groups/public</url>
+        </repository>
+    </repositories>
 
 </project>

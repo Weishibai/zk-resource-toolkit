@@ -1,4 +1,4 @@
-package com.nicklaus.zk.model;
+package com.github.nicklaus4.zk.model;
 
 /**
  * zk node state

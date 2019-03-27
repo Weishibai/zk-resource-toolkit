@@ -1,4 +1,4 @@
-package com.nicklaus.zk.utils;
+package com.github.nicklaus4.zk.utils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.throwIfUnchecked;

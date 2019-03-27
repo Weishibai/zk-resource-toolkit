@@ -1,15 +1,19 @@
-package com.nicklaus.zk;
+package com.github.nicklaus4.zk;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import org.apache.curator.framework.recipes.cache.ChildData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nicklaus.zk.factory.ZkClientCachedFactory;
-import com.nicklaus.zk.model.TestModel;
+import com.github.nicklaus4.zk.factory.ZkClientCachedFactory;
+import com.github.nicklaus4.zk.model.TestModel;
 
 /**
  * zk node resource test
@@ -37,6 +41,23 @@ public class ZkNodeResourceTest {
         } catch (Exception e) {
             return null;
         }
+    }
+
+//    @Test
+    public void testTree() {
+        final ZkTreeNodeResource<List<String>> node = ZkTreeNodeResource.<List<String>>newBuilder()
+                .childDataFactory(this::buildChilds)
+                .path("/test/tree")
+                .curator(ZkClientCachedFactory.get("localhost:2181", "nicklaus"))
+                .build();
+
+        System.out.println(node.get());
+    }
+
+    private List<String> buildChilds(Collection<ChildData> children) {
+        return children.stream()
+                .map(child -> new String(child.getData()))
+                .collect(Collectors.toList());
     }
 
 //    @Test

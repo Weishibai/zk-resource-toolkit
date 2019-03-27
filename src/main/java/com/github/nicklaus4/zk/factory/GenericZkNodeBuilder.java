@@ -1,4 +1,4 @@
-package com.nicklaus.zk;
+package com.github.nicklaus4.zk.factory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
@@ -28,6 +28,7 @@ import org.apache.curator.framework.recipes.cache.NodeCache;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 
+import com.github.nicklaus4.zk.ZkNodeResource;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -224,14 +225,14 @@ public class GenericZkNodeBuilder<E> {
 
     @Nonnull
     public <T> ZkNodeResource<T> build() {
-        precondition();
+        preCondition();
         return new ZkNodeResource(this);
     }
 
     /**
      * make sure required params all set
      */
-    private void precondition() {
+    void preCondition() {
         checkNotNull(factory);
         checkNotNull(cacheHolder);
 

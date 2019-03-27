@@ -1,4 +1,4 @@
-package com.nicklaus.zk.factory;
+package com.github.nicklaus4.zk.factory;
 
 import static java.util.Objects.requireNonNull;
 
@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
-import com.nicklaus.zk.model.ZkClientKey;
+import com.github.nicklaus4.zk.model.ZkClientKey;
 
 /**
  * zk client factory to get CuratorFramework

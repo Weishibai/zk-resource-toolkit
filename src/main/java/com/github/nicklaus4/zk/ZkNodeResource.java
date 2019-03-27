@@ -1,9 +1,9 @@
-package com.nicklaus.zk;
+package com.github.nicklaus4.zk;
 
 import static com.google.common.base.Throwables.throwIfUnchecked;
 import static com.google.common.util.concurrent.Futures.addCallback;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
-import static com.nicklaus.zk.utils.ZkNodeUtils.getPath;
+import static com.github.nicklaus4.zk.utils.ZkNodeUtils.getPath;
 import static java.lang.Thread.MIN_PRIORITY;
 
 import java.util.List;
@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 
 import org.apache.curator.framework.recipes.cache.ChildData;
 import org.apache.curator.framework.recipes.cache.NodeCache;
@@ -23,10 +24,12 @@ import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.nicklaus4.zk.factory.GenericZkNodeBuilder;
+import com.github.nicklaus4.zk.model.ResourceLoader;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.nicklaus.zk.model.ZkNodeState;
+import com.github.nicklaus4.zk.model.ZkNodeState;
 
 /**
  * zk node resource
@@ -34,7 +37,7 @@ import com.nicklaus.zk.model.ZkNodeState;
  * @author weishibai
  * @date 2019/03/14 11:34 AM
  */
-public class ZkNodeResource<E> implements AutoCloseable {
+public class ZkNodeResource<E> implements ResourceLoader<E>, AutoCloseable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ZkNodeResource.class);
 
@@ -56,8 +59,10 @@ public class ZkNodeResource<E> implements AutoCloseable {
 
     private final Object lock = new Object();
 
+    @GuardedBy("lock")
     private volatile E resource;
 
+    @GuardedBy("lock")
     private volatile boolean closed = false;
 
     private volatile boolean hasNodeListener = false;
