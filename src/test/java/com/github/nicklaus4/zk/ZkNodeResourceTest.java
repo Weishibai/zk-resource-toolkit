@@ -2,18 +2,14 @@ package com.github.nicklaus4.zk;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.curator.framework.recipes.cache.ChildData;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.nicklaus4.zk.factory.ZkClientCachedFactory;
-import com.github.nicklaus4.zk.model.TestModel;
 
 /**
  * zk node resource test
@@ -34,14 +30,14 @@ public class ZkNodeResourceTest {
         return new String(data);
     }
 
-    private TestModel buildJson(byte[] data) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(data, TestModel.class);
-        } catch (Exception e) {
-            return null;
-        }
-    }
+//    private TestModel buildJson(byte[] data) {
+//        try {
+//            ObjectMapper mapper = new ObjectMapper();
+//            return mapper.readValue(data, TestModel.class);
+//        } catch (Exception e) {
+//            return null;
+//        }
+//    }
 
 //    @Test
     public void testTree() {
@@ -87,37 +83,37 @@ public class ZkNodeResourceTest {
 //
 //        }
 
-        String path = "/test/json";
-        final ZkNodeResource<TestModel> holder = ZkNodeResource.<TestModel>newBuilder()
-                .withNodeFactory(path, () -> ZkClientCachedFactory.get("localhost:2181", "nicklaus"))
-                .withBuildFactory(this::buildJson)
-                .build();
-
-        System.out.println(holder.get());
-        holder.closeQuietly();
+//        String path = "/test/json";
+//        final ZkNodeResource<TestModel> holder = ZkNodeResource.<TestModel>newBuilder()
+//                .withNodeFactory(path, () -> ZkClientCachedFactory.get("localhost:2181", "nicklaus"))
+//                .withBuildFactory(this::buildJson)
+//                .build();
+//
+//        System.out.println(holder.get());
+//        holder.closeQuietly();
     }
 
 //    @Test
     public void testOnChange() {
-        String path = "/test/json";
-
-        final ZkNodeResource<TestModel> holder = ZkNodeResource.<TestModel>newBuilder()
-                .withNodeFactory(path, () -> ZkClientCachedFactory.get("localhost:2181", "nicklaus"))
-                .withBuildFactory(this::buildJson)
-                .onNodeChange((current, old) -> {
-                    System.out.println("current " + current + " -- " + "old " + old);
-                })
-                .build();
-
-        System.out.println(holder.get());
-
-        try {
-            TimeUnit.SECONDS.sleep(30);
-            System.out.println(holder.get());
-        } catch (InterruptedException e) {
-
-        }
-        holder.closeQuietly();
+//        String path = "/test/json";
+//
+//        final ZkNodeResource<TestModel> holder = ZkNodeResource.<TestModel>newBuilder()
+//                .withNodeFactory(path, () -> ZkClientCachedFactory.get("localhost:2181", "nicklaus"))
+//                .withBuildFactory(this::buildJson)
+//                .onNodeChange((current, old) -> {
+//                    System.out.println("current " + current + " -- " + "old " + old);
+//                })
+//                .build();
+//
+//        System.out.println(holder.get());
+//
+//        try {
+//            TimeUnit.SECONDS.sleep(30);
+//            System.out.println(holder.get());
+//        } catch (InterruptedException e) {
+//
+//        }
+//        holder.closeQuietly();
     }
 
 
