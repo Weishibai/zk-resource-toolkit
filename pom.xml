@@ -4,7 +4,7 @@
 
     <groupId>com.github.nicklaus4</groupId>
     <artifactId>zk-resource-toolkit</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <developers>
         <developer>
